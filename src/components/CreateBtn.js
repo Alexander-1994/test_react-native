@@ -1,7 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useSelector } from 'react-redux';
 
-const CreateBtn = ({text, value}) => {
+const CreateBtn = ({text}) => {
+    const value = useSelector(state => state.fieldReducer.value);
+    
     return (
         <View 
             style={[styles.btn, value.length === 0 ? {backgroundColor: 'rgba(34, 47, 62, 0.5)'} : {backgroundColor: '#222F3E'}]}

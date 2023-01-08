@@ -1,7 +1,6 @@
 const InitialState = {                                                                    
 	items: [],
-	isLoading: true,
-	isError: false
+	isLoading: true
 }
 
 const taskReducer = (state = InitialState, action) => {                                             
@@ -17,11 +16,6 @@ const taskReducer = (state = InitialState, action) => {
 				items: action.payload,
 				isLoading: false
 			};
-		case 'ERROR':
-			return {
-				...state,
-				isError: true
-			};
 		case 'ADD':
 			return {
 				...state,
@@ -30,7 +24,7 @@ const taskReducer = (state = InitialState, action) => {
 		case 'DEL':
 			return {
 				...state,
-				items: state.items.filter(item => item.id !== action.payload)
+				items: state.items.filter(item => item.task !== action.payload)
 			};
 		default:
 			return state;

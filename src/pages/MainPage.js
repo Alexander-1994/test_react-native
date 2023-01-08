@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, FlatList, RefreshControl, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useRequest } from '../customHooks/useRequest';
+import { useSelector, useDispatch } from 'react-redux';
+import { taskFetched, onDelTask } from '../redux/actions';
+import GestureRecognizer from 'react-native-swipe-gestures';
 import Logo from '../assets/icons/Logo';
 import Header from '../components/Header';
 import Task from '../components/Task';
 import Add from '../assets/icons/Add';
 
-import { useSelector, useDispatch } from 'react-redux';
-import { taskFetched, taskError, onDelTask } from '../redux/actions';
-
 const MainPage = ({navigation}) => {
-    const {get} = useRequest(),
+    const {get, del} = useRequest(),
           items = useSelector(state => state.taskReducer.items),
           isLoading = useSelector(state => state.taskReducer.isLoading),
           dispatch = useDispatch();
@@ -20,8 +20,12 @@ const MainPage = ({navigation}) => {
             .then(({data}) => {
                 dispatch(taskFetched(data))
             })
-            .catch(() => dispatch(taskError()))
     };
+
+    const delTask = item => {
+        dispatch(onDelTask(item.task));
+        del(item.id).then(response => console.log(response.data));
+    }
 
     useEffect(() => {
         getTask();
@@ -43,11 +47,18 @@ const MainPage = ({navigation}) => {
                 refreshControl={<RefreshControl refreshing={isLoading} onRefresh={getTask} />}
                 data={items} 
                 renderItem={({item}) => {
-                    return <Task task={item.task} />
+                    return <GestureRecognizer 
+                        onSwipeLeft={() => {delTask(item)}} 
+                        onSwipeRight={() => {delTask(item)}}
+                        >
+                            <Task task={item.task} />
+                    </GestureRecognizer>
             }} />
             <TouchableOpacity style={styles.createTask} onPress={() => navigation.navigate('creation')}>
                 <Add />
             </TouchableOpacity>
+            
+            
         </View>
     )
 }

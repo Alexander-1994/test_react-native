@@ -1,12 +1,9 @@
-import { v4 as uuidv4 } from 'uuid';
+let newId = 1000;
 
 export const taskFetching = () => ({type: 'FETCHING'});
 export const taskFetched = data => ({type: 'FETCHED', payload: data});
-export const taskError = () => ({type: 'ERROR'});
-export const onAddTask = data => ({type: 'ADD', payload: {
-    id: () => uuidv4(), task: data
-}});
-export const onDelTask = id => ({type: 'DEL', payload: id});
+export const onAddTask = data => ({type: 'ADD', payload: {id: newId++, task: data}});
+export const onDelTask = task => ({type: 'DEL', payload: task});
 
 export const onEnter = data => ({type: 'ENTER', payload: data});
 export const onPostLoading = () => ({type: 'POSTING'});
